@@ -1,37 +1,40 @@
 #include "netGradient.h"
+#include <iostream>
 
-fann_type* partialNet(FANN::neural_net* net, fann_type* input, int index) {
-  fann_type step = 0.0001;
-  unsigned int numberInputs = net->get_num_input();
-  int signedNumberInputs = (int) numberInputs;
-  int signedNumberOutputs = (int) net->get_num_outputs();
 
-  fann_type* inputWithStep = stepInput(input, signedNumberInputs, index, step);
-  
-  fann_type* output = net->run(input);
-  fann_type* outputWithStep = net->run(inputWithStep);
+std::vector<std::vector<float> > gradNet(FANN_Wrapper* wrapper, std::vector<float> input, float stepSize) {
+  std::vector<std::vector<float> > gradient;
 
-  fann_type* partial = new fann_type[signedNumberOutputs];
-  for (int i = 0; i < signedNumberOutputs; i++) {
-    partial[i] = (outputWithStep[i] - output[i]) / step;
+  for (int i = 0; i < wrapper->getNumberInputs(); i++) {
+    gradient.push_back(partialNet(wrapper, input, i, stepSize));
   }
 
-  delete inputWithStep[];
-  return &partial;
+  return gradient;
 }
 
-fann_type* stepInput(fann_type* base, int size, int indexToChange, fann_type step) {
-  fann_type* inputWithStep = copyFANN_Type(base,0,size);
-  inputWithStep[indexToChange] += step;
+// index must be less than input.size()
+std::vector<float> partialNet(FANN_Wrapper* wrapper, std::vector<float> input, int index, float stepSize) {
+
+  std::vector<float> inputWithStep = stepInput(input, index, stepSize);
+
+  std::vector<float> outputBase = wrapper->run(input);
+  std::vector<float> outputStep = wrapper->run(inputWithStep);
   
-  return &inputWithStep;
-}
-
-fann_type* copyFANN_Type(fann_type* input, int start, int end) {
-  fann_type copy = new fann_type[end-start];
-  for (int i = start; i < end; i++) {
-    copy[i-start] = input[i];
+  std::vector<float> partial;
+  for (int i = 0; i < outputBase.size(); i++) {
+    partial.push_back( (outputStep[i] - outputBase[i]) / stepSize);
   }
 
-  return &copy;
+  return partial;
+}
+
+std::vector<float> stepInput (std::vector<float> input, int indexToChange, float stepSize) {
+  std::vector<float> copy;
+  for (const auto x : input) {
+    copy.push_back(x);
+  }
+
+  copy[indexToChange] += stepSize;
+
+  return copy;
 }

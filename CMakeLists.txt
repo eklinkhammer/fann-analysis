@@ -7,7 +7,8 @@ set (CMAKE_CXX_STANDARD 11)
 set (CMAKE_CXX_FLAGS "-g -Wall")
 set (CMAKE_MACOSX_RPATH 1)
 set (EXEC execProject)
-set (SOURCE src/experiment.cpp)
+set (SOURCE src/experiment.cpp src/netGradient.cpp)
+set (WRAPPER_DIR /Users/klinkhae/research/cpp_ws/fann-cpp-vector)
 
 configure_file(CMakeLists.txt.in
                googletest-download/CMakeLists.txt)
@@ -23,5 +24,6 @@ find_package(fann)
  
 ## Create Executable
 add_executable(${EXEC} ${SOURCE})
-target_include_directories(${EXEC} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} include)
+target_include_directories(${EXEC} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} include ${WRAPPER_DIR}/include)
 target_link_libraries(${EXEC} fann)
+target_link_libraries(${EXEC} ${WRAPPER_DIR}/cmake/libFANN_Wrapper.a)

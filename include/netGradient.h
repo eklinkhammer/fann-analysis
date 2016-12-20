@@ -4,11 +4,10 @@
 #include <vector>
 #include <fann.h>
 #include <fann_cpp.h>
+#include "wrapper.h"
 
-fann_type* partialNet(FANN::neural_net*, fann_type*, int);
-std::vector<fann_type*> gradNet(FANN::neural_net*, fann_type*);
+std::vector<float> partialNet(FANN_Wrapper*, std::vector<float>, int,float);
+std::vector<std::vector<float> > gradNet(FANN_Wrapper*, std::vector<float>,float);
+std::vector<float> stepInput(std::vector<float>,int,float);
 
-fann_type* stepInput(fann_type*,int,int);
-
-fann_type* copyFANN_Type(fann_type*, int, int);
 #endif
