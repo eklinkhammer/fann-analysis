@@ -2,6 +2,18 @@
 #include <iostream>
 
 
+
+std::vector<std::vector<float> > partialNetFunction(FANN_Wrapper* net, std::vector<float> input, int pos, float step, int length) {
+  std::vector<std::vector<float> > partials;
+  
+  for (int i = 0; i < length; i++) {
+    input[pos] += step;
+    partials.push_back(partialNet(net, input, i, step));
+  }
+
+  return partials;
+}
+
 std::vector<std::vector<float> > gradNet(FANN_Wrapper* wrapper, std::vector<float> input, float stepSize) {
   std::vector<std::vector<float> > gradient;
 
@@ -37,4 +49,22 @@ std::vector<float> stepInput (std::vector<float> input, int indexToChange, float
   copy[indexToChange] += stepSize;
 
   return copy;
+}
+
+float orientation(std::vector<float> input) {
+  if (input.size() != 2) {
+    return 0;
+  } else {
+    float x = input[0]; float y = input[1];
+    return atan2(y,x);
+  }
+}
+
+float norm(std::vector<float> input) {
+  float sum = 0;
+  for (const auto i : input) {
+    sum += (i*i);
+  }
+
+  return sqrt(sum);
 }
