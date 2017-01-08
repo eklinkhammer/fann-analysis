@@ -5,7 +5,8 @@
 #include <iostream>
 
 class InputsTest : public::testing::Test {
-
+public:
+  const std::string configurationFile = "../input/agent.policy";
 };
 
 TEST_F(InputsTest,testScalarPermutationsCountOne) {
@@ -140,26 +141,24 @@ TEST_F(InputsTest, testResponse) {
   components a = {oneA_NW_zeroP, zeroA_oneP_NW};
   PermutationSettings settings;
   settings.scalar = 2;
-  settings.count = 2;
+  settings.count = 1;
   settings.step = 0.5;
   PartialSettings partialSettings;
   partialSettings.count = 1;
   partialSettings.stepSize = 1;
   partialSettings.posInput = 0;
   
-  const std::string configurationFile = "../input/agent.policy";
-  FANN::neural_net* net = new FANN::neural_net(configurationFile);
+
+  FANN::neural_net* net = new FANN::neural_net(this->configurationFile);
   FANN_Wrapper* wrapper = new FANN_Wrapper(net);
 
   std::vector<InputResponse> output = response(a, wrapper, settings, partialSettings);
-  inputs expected = {{0.0, 2.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0},
-		     {0.0, 2.0, 0.0, 0.0, 0.0, 2.5, 0.0, 0.0},
-		     {0.0, 2.5, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0},
-		     {0.0, 2.5, 0.0, 0.0, 0.0, 2.5, 0.0, 0.0}};
-  for (const auto v : expected) {
-    for (const auto i : wrapper->run(v)) {
-      std::cout << i << " ";
-    }
-    std::cout << std::endl;
+
+  std::vector<float> expectedVals = {-0.00522989, 0.0000445843, -0.000192523, 0.0197209, -0.000340343, 0.0000584722, -0.00730741, -0.000175774};
+
+  for (int i = 0; i < output.size(); i++) {
+    output[i].index = i;
+    output[i].partialValues[0] = 0;
+    output[i].partialValues[1] = expectedVals[i];
   }
 }

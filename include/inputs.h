@@ -26,9 +26,14 @@ int posInput;
 
 struct InputResponse {
 input i;
-vectorFs partialValues;
+vectorF partialValues;
 int index;
 };
+
+PermutationSettings getDefaultPermutationSettings();
+PartialSettings getDefaultPartialSettings();
+
+void printInputResponse(InputResponse);
 
 // All scalar multiples of a vector
 inputs scalarPermutations(const component&,PermutationSettings);
@@ -54,5 +59,8 @@ const component zeroA_oneP_SW = {0,0,0,0,0,0,1,0};
 const component zeroA_oneP_SE = {0,0,0,0,0,0,0,1};
 
 const component zeros         = {0,0,0,0,0,0,0,0};
+
+
+void addInputs(std::vector<components>&);
 
 #endif

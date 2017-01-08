@@ -7,8 +7,8 @@ std::vector<std::vector<float> > partialNetFunction(FANN_Wrapper* net, std::vect
   std::vector<std::vector<float> > partials;
   
   for (int i = 0; i < length; i++) {
+    partials.push_back(partialNet(net, input, pos, step));
     input[pos] += step;
-    partials.push_back(partialNet(net, input, i, step));
   }
 
   return partials;
@@ -67,4 +67,8 @@ float norm(std::vector<float> input) {
   }
 
   return sqrt(sum);
+}
+
+float weightedOrientation(std::vector<float> input) {
+  return orientation(input) * norm(input);
 }

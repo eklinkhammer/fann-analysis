@@ -13,4 +13,5 @@ std::vector<std::vector<float> > gradNet(FANN_Wrapper*, std::vector<float>,float
 std::vector<float> stepInput(std::vector<float>,int,float);
 float orientation(std::vector<float>);
 float norm(std::vector<float>);
+float weightedOrientation(std::vector<float>);
 #endif
